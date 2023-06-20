@@ -5,6 +5,7 @@ public class BlockController : MonoBehaviour
     private Vector3 targetPosition;
     private float speed;
     private Collider2D col;
+    public GameObject Hit;
 
     private void Start()
     {
@@ -26,6 +27,7 @@ public class BlockController : MonoBehaviour
         {
             enabled = false;
             col.isTrigger = false;
+            Destroy(Hit);
         }
     }
 }

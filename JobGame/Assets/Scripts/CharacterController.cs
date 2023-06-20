@@ -10,8 +10,8 @@ public class CharacterController : MonoBehaviour
     public float columnSpeed = 2f; // Ўвидк≥сть руху стовб≥в
     public float blockSpeed = 5f; // Ўвидк≥сть руху блок≥в
     public float blockSpawnRate = 1f; // „астота по€ви блок≥в
-    public int PlusHeightRight;
-    public int PlusHeightLeft;
+    public float PlusHeightRight;
+    public float PlusHeightLeft;
 
     private bool isOnLeftColumn = true; // «м≥нна, що вказуЇ, чи персонаж знаходитьс€ на л≥вому стовб≥
     private GameObject cam;
@@ -27,11 +27,14 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (GameManager.IsGameStarted)
         {
-            Jump();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Jump();
+            }
+            cam.transform.Translate(Vector3.up * columnSpeed * Time.deltaTime);
         }
-        cam.transform.Translate(Vector3.up * columnSpeed * Time.deltaTime);
     }
 
     private void MoveColumns()
@@ -48,41 +51,52 @@ public class CharacterController : MonoBehaviour
 
     private void SpawnBlock()
     {
-        float randomX;
-        Vector3 targetPosition;
-
-        if (BlockPlace)
+        if (GameManager.IsGameStarted)
         {
-            randomX = 5;
-            targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + 2f + PlusHeightLeft);
-            BlockPlace = false;
-            PlusHeightLeft += 1;
-        }
-        else
-        {
-            randomX = -5;
-            targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + 2f + PlusHeightRight);
-            BlockPlace = true;
-            PlusHeightRight += 1;
-        }
 
-        GameObject block = Instantiate(blockPrefab, new Vector3(randomX, leftColumn.position.y+1 + PlusHeightRight, 0f), Quaternion.identity);
-        block.GetComponent<BlockController>().MoveToTarget(targetPosition, blockSpeed);
+            float randomX;
+            Vector3 targetPosition;
+
+            if (BlockPlace)
+            {
+                randomX = 5;
+                targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + 2f + PlusHeightLeft);
+                BlockPlace = false;
+                PlusHeightLeft += 0.8f;
+            }
+            else
+            {
+                randomX = -5;
+                targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + 1.5f + PlusHeightRight);
+                BlockPlace = true;
+                PlusHeightRight += 0.8f;
+            }
+
+            GameObject block = Instantiate(blockPrefab, new Vector3(randomX, leftColumn.position.y + 1 + PlusHeightRight, 0f), Quaternion.identity);
+            block.GetComponent<BlockController>().MoveToTarget(targetPosition, blockSpeed);
+        }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Hit"))
+        {
+            Destroy(gameObject);
+        }
+    }
     private void Jump()
     {
         Vector3 targetPosition;
 
-        if (!isOnLeftColumn)
+        if (isOnLeftColumn)
         {
             targetPosition = new Vector3(rightColumn.position.x, transform.position.y + 2);
-            isOnLeftColumn = true;
+            isOnLeftColumn = false;
         }
         else
         {
             targetPosition = new Vector3(leftColumn.position.x, transform.position.y + 2);
-            isOnLeftColumn = false;
+            isOnLeftColumn = true;
         }
 
         StartCoroutine(JumpRoutine(targetPosition));
