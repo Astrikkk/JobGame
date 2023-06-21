@@ -6,6 +6,7 @@ public class BlockController : MonoBehaviour
     private float speed;
     private Collider2D col;
     public GameObject Hit;
+    public Sprite placed;
 
     private void Start()
     {
@@ -27,7 +28,9 @@ public class BlockController : MonoBehaviour
         {
             enabled = false;
             col.isTrigger = false;
+            GameManager.Money += GameManager.Income;
             Destroy(Hit);
+            gameObject.GetComponent<SpriteRenderer>().sprite = placed;
         }
     }
 }

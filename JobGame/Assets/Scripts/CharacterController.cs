@@ -21,6 +21,8 @@ public class CharacterController : MonoBehaviour
     private float jumpDuration = 0.5f; // Тривалість прижка
     private bool BlockPlace = true;
 
+    private bool CanJump = false;
+
     private void Start()
     {
         InvokeRepeating("SpawnBlock", 0f, blockSpawnRate);
@@ -86,25 +88,32 @@ public class CharacterController : MonoBehaviour
         {
             GameManager.RestartScene();
         }
+        if (collision.gameObject.CompareTag("Platform"))
+        {
+            CanJump = true;
+        }
     }
-    private void Jump()
+    public void Jump()
     {
-        Vector3 targetPosition;
-
-        if (isOnLeftColumn)
+        if (CanJump)
         {
-            targetPosition = new Vector3(rightColumn.position.x, transform.position.y + 2 + (GameManager.JumpLvl / 2));
-            isOnLeftColumn = false;
-        }
-        else
-        {
-            targetPosition = new Vector3(leftColumn.position.x, transform.position.y + 2 + (GameManager.JumpLvl / 2));
-            isOnLeftColumn = true;
-        }
+            Vector3 targetPosition;
 
-        StartCoroutine(JumpRoutine(targetPosition));
+            if (isOnLeftColumn)
+            {
+                targetPosition = new Vector3(rightColumn.position.x, transform.position.y + 2 + (GameManager.JumpLvl / 2));
+                isOnLeftColumn = false;
+            }
+            else
+            {
+                targetPosition = new Vector3(leftColumn.position.x, transform.position.y + 2 + (GameManager.JumpLvl / 2));
+                isOnLeftColumn = true;
+            }
+
+            StartCoroutine(JumpRoutine(targetPosition));
+            CanJump = false;
+        }
     }
-
     private IEnumerator JumpRoutine(Vector3 targetPosition)
     {
         float elapsedTime = 0f;
