@@ -22,7 +22,7 @@ public class Clouds : MonoBehaviour
 
     public void Respawm()
     {
-        int a = Random.Range(1, 5);
+        int a = Random.Range(0, 5);
         gameObject.GetComponent<SpriteRenderer>().sprite = sprites[a];
         transform.position = new Vector3(Random.Range(-4, 4), Mcam.transform.position.y + 10, 0);
     }

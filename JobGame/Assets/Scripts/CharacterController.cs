@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
 
 public class CharacterController : MonoBehaviour
@@ -12,6 +13,7 @@ public class CharacterController : MonoBehaviour
     public float blockSpawnRate = 1f; // Частота появи блоків
     public float PlusHeightRight;
     public float PlusHeightLeft;
+    public Sprite[] skins;
 
     private bool isOnLeftColumn = true; // Змінна, що вказує, чи персонаж знаходиться на лівому стовбі
     private GameObject cam;
@@ -23,6 +25,7 @@ public class CharacterController : MonoBehaviour
     {
         InvokeRepeating("SpawnBlock", 0f, blockSpawnRate);
         cam = GameObject.FindGameObjectWithTag("MainCamera");
+        gameObject.GetComponent<SpriteRenderer>().sprite = skins[Random.Range(0, 6)];
     }
 
     private void Update()
@@ -51,7 +54,7 @@ public class CharacterController : MonoBehaviour
 
     private void SpawnBlock()
     {
-        if (GameManager.IsGameStarted)
+        if (GameManager.IsGameStarted == true)
         {
 
             float randomX;
@@ -81,7 +84,7 @@ public class CharacterController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Hit"))
         {
-            Destroy(gameObject);
+            GameManager.RestartScene();
         }
     }
     private void Jump()
@@ -90,12 +93,12 @@ public class CharacterController : MonoBehaviour
 
         if (isOnLeftColumn)
         {
-            targetPosition = new Vector3(rightColumn.position.x, transform.position.y + 2);
+            targetPosition = new Vector3(rightColumn.position.x, transform.position.y + 2 + (GameManager.JumpLvl / 2));
             isOnLeftColumn = false;
         }
         else
         {
-            targetPosition = new Vector3(leftColumn.position.x, transform.position.y + 2);
+            targetPosition = new Vector3(leftColumn.position.x, transform.position.y + 2 + (GameManager.JumpLvl / 2));
             isOnLeftColumn = true;
         }
 
