@@ -9,10 +9,15 @@ public class GameManager : MonoBehaviour
 {
     public GameObject MainMenu;
     public GameObject JumpButton;
+    public GameObject GameOverMenu;
     public static bool IsGameStarted = false;
     public TextMeshProUGUI MoneyText;
     public TextMeshProUGUI Button1;
     public TextMeshProUGUI Button2;
+    public TextMeshProUGUI ScoreText;
+    public TextMeshProUGUI BestScoreText;
+    public static int Score;
+    public static int BestScore;
     public static double Money;
     public static int JumpLvl = 1;
     public static int JumpUpgrade;
@@ -32,6 +37,14 @@ public class GameManager : MonoBehaviour
     {
         LoadData();
     }
+    public void WatchVideoAndContinue(CharacterController player)
+    {
+        ///whatch video
+        Time.timeScale = 1f;
+        player.Invisibility();
+        player.transform.Translate(Vector3.up * 10);
+        GameOverMenu.SetActive(false);
+    }
 
     public static void Save()
     {
@@ -41,7 +54,9 @@ public class GameManager : MonoBehaviour
             JumpLvl = JumpLvl,
             JumpUpgrade = JumpUpgrade,
             IncomeLvl = IncomeLvl,
-            IncomeUpgrade = IncomeUpgrade
+            IncomeUpgrade = IncomeUpgrade,
+            Score = Score,
+            BestScore = BestScore
         };
         string jsonData = JsonUtility.ToJson(saveData);
         File.WriteAllText("save.json", jsonData);
@@ -59,6 +74,8 @@ public class GameManager : MonoBehaviour
             JumpUpgrade = saveData.JumpUpgrade;
             IncomeLvl = saveData.IncomeLvl;
             IncomeUpgrade = saveData.IncomeUpgrade;
+            Score = saveData.Score;
+            BestScore = saveData.BestScore;
         }
     }
 
@@ -72,6 +89,8 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         MoneyText.text = Money.ToString() + "$";
+        ScoreText.text = Score.ToString();
+        BestScoreText.text = BestScore.ToString();
         Button1.text = $"JUMP HEIGHT  LEVEL:{JumpLvl}  COST:{JumpUpgrade}";
         Button2.text = $"INCOME  LEVEL:{IncomeLvl}  COST:{IncomeUpgrade}";
     }
@@ -83,6 +102,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(currentSceneName);
     }
 
+    public void Loose()
+    {
+        GameOverMenu.SetActive(true);
+        Score = 0;
+        Time.timeScale = 0f;
+    }
     public void UpgradeIncome()
     {
         if (Money >= IncomeUpgrade)
@@ -114,5 +139,7 @@ public class GameManager : MonoBehaviour
         public int JumpUpgrade;
         public int IncomeLvl;
         public int IncomeUpgrade;
+        public int Score;
+        public int BestScore;
     }
 }

@@ -14,6 +14,7 @@ public class CharacterController : MonoBehaviour
     public float PlusHeightRight;
     public float PlusHeightLeft;
     public Sprite[] skins;
+    private Collider2D col;
 
     private bool isOnLeftColumn = true; // Змінна, що вказує, чи персонаж знаходиться на лівому стовбі
     private GameObject cam;
@@ -22,6 +23,7 @@ public class CharacterController : MonoBehaviour
     private bool BlockPlace = true;
 
     private bool CanJump = false;
+    public GameManager gm;
 
     private void Start()
     {
@@ -29,7 +31,7 @@ public class CharacterController : MonoBehaviour
         cam = GameObject.FindGameObjectWithTag("MainCamera");
         gameObject.GetComponent<SpriteRenderer>().sprite = skins[Random.Range(0, 6)];
         Time.timeScale = 1f;
-
+        col = gameObject.GetComponent<Collider2D>();
     }
 
     private void Update()
@@ -88,7 +90,7 @@ public class CharacterController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Hit"))
         {
-            GameManager.RestartScene();
+            gm.Loose();
         }
         if (collision.gameObject.CompareTag("Platform"))
         {
@@ -139,13 +141,23 @@ public class CharacterController : MonoBehaviour
         transform.position = targetPosition;
     }
 
-    // Розраховує висоту прижку по балістичній траєкторії
+
     private float CalculateBallisticJumpHeight(float t, float jumpHeight)
     {
         float yOffset = jumpHeight * (4f * t - 4f * t * t);
         return yOffset;
     }
+    IEnumerator ToggleCollider()
+    {
+        col.enabled = false;
+        yield return new WaitForSeconds(1);
+        col.enabled = true;
+    }
 
+    public void Invisibility()
+    {
+        StartCoroutine(ToggleCollider());
+    }
 
 
 }

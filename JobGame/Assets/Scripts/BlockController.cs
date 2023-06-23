@@ -29,8 +29,11 @@ public class BlockController : MonoBehaviour
             enabled = false;
             col.isTrigger = false;
             GameManager.Money += GameManager.Income;
-            Time.timeScale += 0.01f;
+            if (Time.timeScale <= 20)
+                Time.timeScale += 0.05f;
             Destroy(Hit);
+            GameManager.Score++;
+            if (GameManager.Score > GameManager.BestScore) GameManager.BestScore = GameManager.Score;
             gameObject.GetComponent<SpriteRenderer>().sprite = placed;
         }
     }
