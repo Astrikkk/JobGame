@@ -28,6 +28,8 @@ public class CharacterController : MonoBehaviour
         InvokeRepeating("SpawnBlock", 0f, blockSpawnRate);
         cam = GameObject.FindGameObjectWithTag("MainCamera");
         gameObject.GetComponent<SpriteRenderer>().sprite = skins[Random.Range(0, 6)];
+        Time.timeScale = 1f;
+
     }
 
     private void Update()
@@ -101,12 +103,12 @@ public class CharacterController : MonoBehaviour
 
             if (isOnLeftColumn)
             {
-                targetPosition = new Vector3(rightColumn.position.x, transform.position.y + 2 + (GameManager.JumpLvl / 2));
+                targetPosition = new Vector3(rightColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 2)));
                 isOnLeftColumn = false;
             }
             else
             {
-                targetPosition = new Vector3(leftColumn.position.x, transform.position.y + 2 + (GameManager.JumpLvl / 2));
+                targetPosition = new Vector3(leftColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 2)));
                 isOnLeftColumn = true;
             }
 
@@ -114,15 +116,21 @@ public class CharacterController : MonoBehaviour
             CanJump = false;
         }
     }
+
     private IEnumerator JumpRoutine(Vector3 targetPosition)
     {
-        float elapsedTime = 0f;
+        float jumpHeight = 2f + (GameManager.JumpLvl / 2); // Висота прижку
+        float jumpDuration = 1f; // Тривалість прижку
+
         Vector3 startingPosition = transform.position;
+        float elapsedTime = 0f;
 
         while (elapsedTime < jumpDuration)
         {
             float t = elapsedTime / jumpDuration;
-            transform.position = Vector3.Lerp(startingPosition, targetPosition, t);
+            float yOffset = CalculateBallisticJumpHeight(t, jumpHeight);
+            Vector3 newPosition = Vector3.Lerp(startingPosition, targetPosition, t) + Vector3.up * yOffset;
+            transform.position = newPosition;
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -130,4 +138,14 @@ public class CharacterController : MonoBehaviour
 
         transform.position = targetPosition;
     }
+
+    // Розраховує висоту прижку по балістичній траєкторії
+    private float CalculateBallisticJumpHeight(float t, float jumpHeight)
+    {
+        float yOffset = jumpHeight * (4f * t - 4f * t * t);
+        return yOffset;
+    }
+
+
+
 }
