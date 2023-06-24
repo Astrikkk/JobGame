@@ -150,7 +150,7 @@ public class CharacterController : MonoBehaviour
     IEnumerator ToggleCollider()
     {
         col.enabled = false;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.1f);
         col.enabled = true;
     }
 

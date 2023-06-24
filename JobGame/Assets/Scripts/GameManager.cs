@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject MainMenu;
     public GameObject JumpButton;
     public GameObject GameOverMenu;
+    public GameObject WatchVideoMenu;
     public static bool IsGameStarted = false;
     public TextMeshProUGUI MoneyText;
     public TextMeshProUGUI Button1;
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
         IsGameStarted = false;
         if (IncomeUpgrade <= 10) IncomeUpgrade = 10;
         if (JumpUpgrade <= 10) JumpUpgrade = 10;
+            WatchVideoMenu.SetActive(false);
     }
 
     private void Awake()
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
             JumpUpgrade = JumpUpgrade,
             IncomeLvl = IncomeLvl,
             IncomeUpgrade = IncomeUpgrade,
+            Income = Income,
             Score = Score,
             BestScore = BestScore
         };
@@ -76,6 +79,7 @@ public class GameManager : MonoBehaviour
             IncomeUpgrade = saveData.IncomeUpgrade;
             Score = saveData.Score;
             BestScore = saveData.BestScore;
+            Income = saveData.Income;
         }
     }
 
@@ -118,6 +122,10 @@ public class GameManager : MonoBehaviour
             IncomeUpgrade += 10;
             Save();
         }
+        else
+        {
+            WatchVideoMenu.SetActive(true);
+        }
     }
 
     public void UpgradeJump()
@@ -129,6 +137,20 @@ public class GameManager : MonoBehaviour
             JumpUpgrade += 10;
             Save();
         }
+        else
+        {
+            WatchVideoMenu.SetActive(true);
+        }
+    }
+
+    public void WatchVideoAndUpgrade()
+    {
+        //WATCH VIDEO CODE
+        IncomeLvl++;
+        Income++;
+        IncomeUpgrade += 10;
+        JumpLvl++;
+        JumpUpgrade += 10;
     }
 
     [System.Serializable]
@@ -136,6 +158,7 @@ public class GameManager : MonoBehaviour
     {
         public double Money;
         public int JumpLvl;
+        public double Income;
         public int JumpUpgrade;
         public int IncomeLvl;
         public int IncomeUpgrade;
