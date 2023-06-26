@@ -20,7 +20,7 @@ public class CharacterController : MonoBehaviour
     private GameObject cam;
 
     private float jumpDuration = 0.5f; // Тривалість прижка
-    private bool BlockPlace = true;
+    public bool BlockPlace = true;
 
     private bool CanJump = false;
     public GameManager gm;
@@ -43,6 +43,14 @@ public class CharacterController : MonoBehaviour
                 Jump();
             }
             cam.transform.Translate(Vector3.up * columnSpeed * Time.deltaTime);
+        }
+        if (transform.position.x <= -2)
+        {
+            transform.position = new Vector3(leftColumn.transform.position.x, transform.position.y + 10+ PlusHeightLeft, transform.position.z);
+        }
+        else if(transform.position.x >= 2)
+        {
+            transform.position = new Vector3(rightColumn.transform.position.x, transform.position.y + 10+ PlusHeightLeft, transform.position.z);
         }
     }
 

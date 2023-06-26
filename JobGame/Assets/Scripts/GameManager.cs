@@ -19,13 +19,16 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI BestScoreText;
     public static int Score;
     public static int BestScore;
-    public static double Money;
+    public static float Money;
     public static int JumpLvl = 1;
     public static int JumpUpgrade;
     public static int IncomeLvl = 1;
     public static int IncomeUpgrade;
 
-    public static double Income = 0.01;
+    public static float Income = 0.01f;
+
+
+    private float lastTimeScale;
 
     private void Start()
     {
@@ -33,6 +36,7 @@ public class GameManager : MonoBehaviour
         if (IncomeUpgrade <= 10) IncomeUpgrade = 10;
         if (JumpUpgrade <= 10) JumpUpgrade = 10;
             WatchVideoMenu.SetActive(false);
+        if (Income <= 0) Income = 0.01f;
     }
 
     private void Awake()
@@ -42,9 +46,17 @@ public class GameManager : MonoBehaviour
     public void WatchVideoAndContinue(CharacterController player)
     {
         ///whatch video
-        Time.timeScale = 1f;
+        if (lastTimeScale >= 2) lastTimeScale -= 0.5f;
+        Time.timeScale = lastTimeScale;
         player.Invisibility();
-        player.transform.Translate(Vector3.up * 10);
+        if (player.BlockPlace)
+        {
+            player.transform.position = new Vector3(player.leftColumn.transform.position.x, transform.position.y + 10 + player.PlusHeightLeft, transform.position.z);
+        }
+        else
+        {
+            player.transform.position = new Vector3(player.rightColumn.transform.position.x, transform.position.y + 10 + player.PlusHeightLeft, transform.position.z);
+        }
         GameOverMenu.SetActive(false);
     }
 
@@ -85,6 +97,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        Score = 0;
         IsGameStarted = true;
         MainMenu.SetActive(false);
         JumpButton.SetActive(true);
@@ -109,7 +122,7 @@ public class GameManager : MonoBehaviour
     public void Loose()
     {
         GameOverMenu.SetActive(true);
-        Score = 0;
+        lastTimeScale = Time.timeScale;
         Time.timeScale = 0f;
     }
     public void UpgradeIncome()
@@ -156,9 +169,9 @@ public class GameManager : MonoBehaviour
     [System.Serializable]
     private class SaveData
     {
-        public double Money;
+        public float Money;
         public int JumpLvl;
-        public double Income;
+        public float Income;
         public int JumpUpgrade;
         public int IncomeLvl;
         public int IncomeUpgrade;

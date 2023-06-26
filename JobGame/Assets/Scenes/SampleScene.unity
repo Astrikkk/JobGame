@@ -353,7 +353,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 143.42, y: -189.93}
+  m_AnchoredPosition: {x: 143.41998, y: -189.93}
   m_SizeDelta: {x: 201.52, y: 84.890015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &38228639
@@ -1490,6 +1490,7 @@ MonoBehaviour:
   - {fileID: -1536994602, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
   - {fileID: 1013415271, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
   - {fileID: 512270809, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
+  BlockPlace: 1
   gm: {fileID: 1694366277}
 --- !u!50 &514474188
 Rigidbody2D:
@@ -2397,7 +2398,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48.75
+  m_fontSize: 48.3
   m_fontSizeBase: 54.97
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3023,7 +3024,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 2.3027039, y: 321.19}
+  m_AnchoredPosition: {x: 2.3026733, y: 321.19}
   m_SizeDelta: {x: -44.646, y: 77.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1083112498
@@ -3655,7 +3656,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 195.83, y: -270.27}
+  m_AnchoredPosition: {x: 195.83002, y: -270.27}
   m_SizeDelta: {x: 306.34, y: 75.79001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1336725404
@@ -3790,7 +3791,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0.000030517578, y: 0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
   m_SizeDelta: {x: 0.84002686, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1527338758
@@ -3848,7 +3849,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 44.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5340,7 +5341,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2018424936
 RectTransform:
   m_ObjectHideFlags: 0
