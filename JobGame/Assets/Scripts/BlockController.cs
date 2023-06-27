@@ -29,8 +29,8 @@ public class BlockController : MonoBehaviour
             enabled = false;
             col.isTrigger = false;
             GameManager.Money += GameManager.Income;
-            if (Time.timeScale <= 20)
-                Time.timeScale += 0.05f;
+            if (Time.timeScale <= 10)
+                Time.timeScale += 0.02f;
             Destroy(Hit);
             GameManager.Score++;
             if (GameManager.Score > GameManager.BestScore) GameManager.BestScore = GameManager.Score;
