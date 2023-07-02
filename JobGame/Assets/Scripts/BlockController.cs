@@ -36,10 +36,11 @@ public class BlockController : MonoBehaviour
                 Time.timeScale += 0.02f;
             Destroy(Hit);
             GameManager.Score++;
-            if (GameManager.Score > GameManager.BestScore && newRec == 0)
+            if (GameManager.Score > GameManager.BestScore)
             {
                 GameManager.BestScore = GameManager.Score;
-                newRec = 1;
+                if (newRec == 0)
+                    newRec = 1;
             }
             gameObject.GetComponent<SpriteRenderer>().sprite = placed;
         }
