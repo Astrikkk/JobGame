@@ -8,6 +8,9 @@ public class BlockController : MonoBehaviour
     public GameObject Hit;
     public Sprite placed;
 
+
+    public static int newRec = 0;
+
     private void Start()
     {
         col = gameObject.GetComponent<Collider2D>();
@@ -33,7 +36,11 @@ public class BlockController : MonoBehaviour
                 Time.timeScale += 0.02f;
             Destroy(Hit);
             GameManager.Score++;
-            if (GameManager.Score > GameManager.BestScore) GameManager.BestScore = GameManager.Score;
+            if (GameManager.Score > GameManager.BestScore && newRec == 0)
+            {
+                GameManager.BestScore = GameManager.Score;
+                newRec = 1;
+            }
             gameObject.GetComponent<SpriteRenderer>().sprite = placed;
         }
     }

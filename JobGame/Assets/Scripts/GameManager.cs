@@ -11,12 +11,15 @@ public class GameManager : MonoBehaviour
     public GameObject JumpButton;
     public GameObject GameOverMenu;
     public GameObject WatchVideoMenu;
+    public GameObject NewRecordBar;
+    public GameObject ScoreBar;
     public static bool IsGameStarted = false;
     public TextMeshProUGUI MoneyText;
     public TextMeshProUGUI Button1;
     public TextMeshProUGUI Button2;
     public TextMeshProUGUI ScoreText;
     public TextMeshProUGUI BestScoreText;
+    public TextMeshProUGUI ScoreTextGame;
     public static int Score;
     public static int BestScore;
     public static float Money;
@@ -57,6 +60,7 @@ public class GameManager : MonoBehaviour
         {
             player.transform.position = new Vector3(player.rightColumn.transform.position.x, transform.position.y + 10 + player.PlusHeightLeft, transform.position.z);
         }
+        ScoreBar.SetActive(true);
         GameOverMenu.SetActive(false);
     }
 
@@ -101,15 +105,23 @@ public class GameManager : MonoBehaviour
         IsGameStarted = true;
         MainMenu.SetActive(false);
         JumpButton.SetActive(true);
+        ScoreBar.SetActive(true);
     }
 
     private void FixedUpdate()
     {
         MoneyText.text = Money.ToString() + "$";
         ScoreText.text = Score.ToString();
+        ScoreTextGame.text = Score.ToString();
         BestScoreText.text = BestScore.ToString();
         Button1.text = $"JUMP HEIGHT  LEVEL:{JumpLvl}  COST:{JumpUpgrade}";
         Button2.text = $"INCOME  LEVEL:{IncomeLvl}  COST:{IncomeUpgrade}";
+
+        if(BlockController.newRec == 1)
+        {
+            BlockController.newRec = 2;
+            ShowNewRecord();
+        }
     }
 
     public static void RestartScene()
@@ -121,6 +133,7 @@ public class GameManager : MonoBehaviour
 
     public void Loose()
     {
+        ScoreBar.SetActive(false);
         GameOverMenu.SetActive(true);
         lastTimeScale = Time.timeScale;
         Time.timeScale = 0f;
@@ -165,6 +178,20 @@ public class GameManager : MonoBehaviour
         JumpLvl++;
         JumpUpgrade += 10;
     }
+    public void ShowNewRecord()
+    {
+        NewRecordBar.SetActive(true);
+        StartCoroutine(HideNewRecordBarAfterDelay());
+    }
+
+    private IEnumerator HideNewRecordBarAfterDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        NewRecordBar.SetActive(false);
+    }
+
+
+
 
     [System.Serializable]
     private class SaveData
