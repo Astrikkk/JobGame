@@ -7,6 +7,7 @@ public class ComboBarScript : MonoBehaviour
 {
     public Sprite[] Combos;
     private Image comboImage;
+    public Image comboImageMenu;
 
     private void Start()
     {
@@ -15,19 +16,22 @@ public class ComboBarScript : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Score == 10) ShowCombo(0);
-        if (GameManager.Score == 20) ShowCombo(1);
-        if (GameManager.Score == 50) ShowCombo(2);
-        if (GameManager.Score == 100) ShowCombo(3);
-        if (GameManager.Score == 200) ShowCombo(4);
-        if (GameManager.Score == 500) ShowCombo(5);
-        if (GameManager.Score == 1000) ShowCombo(6);
+        if (GameManager.ComboScore == 10) ShowCombo(0);
+        if (GameManager.ComboScore == 20) ShowCombo(1);
+        if (GameManager.ComboScore == 50) ShowCombo(2);
+        if (GameManager.ComboScore == 100) ShowCombo(3);
+        if (GameManager.ComboScore == 200) ShowCombo(4);
+        if (GameManager.ComboScore == 500) ShowCombo(5);
+        if (GameManager.ComboScore == 1000) ShowCombo(6);
+        comboImageMenu.sprite = Combos[GameManager.BestComboScore];
     }
 
     public void ShowCombo(int i)
     {
         comboImage.enabled = true;
         comboImage.sprite = Combos[i];
+        GameManager.BestComboScore = i;
+        GameManager.Save();
         StartCoroutine(HideComboAfterDelay());
     }
 

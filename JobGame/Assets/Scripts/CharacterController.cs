@@ -52,6 +52,10 @@ public class CharacterController : MonoBehaviour
         {
             transform.position = new Vector3(rightColumn.transform.position.x, transform.position.y + 10+ PlusHeightLeft, transform.position.z);
         }
+        if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            GameManager.DeleteAllData();
+        }
     }
 
     private void MoveColumns()

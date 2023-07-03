@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public GameObject GameOverMenu;
     public GameObject WatchVideoMenu;
     public GameObject NewRecordBar;
+    public GameObject BestScoreBar;
+    public GameObject BestComboBar;
     public GameObject ScoreBar;
     public static bool IsGameStarted = false;
     public TextMeshProUGUI MoneyText;
@@ -19,9 +21,12 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI Button2;
     public TextMeshProUGUI ScoreText;
     public TextMeshProUGUI BestScoreText;
+    public TextMeshProUGUI BestScoreTextMenu;
     public TextMeshProUGUI ScoreTextGame;
     public static int Score;
+    public static int ComboScore;
     public static int BestScore;
+    public static int BestComboScore = -1;
     public static float Money;
     public static int JumpLvl = 1;
     public static int JumpUpgrade;
@@ -35,16 +40,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        LoadData();
         IsGameStarted = false;
         if (IncomeUpgrade <= 10) IncomeUpgrade = 10;
         if (JumpUpgrade <= 10) JumpUpgrade = 10;
             WatchVideoMenu.SetActive(false);
         if (Income <= 0) Income = 0.01f;
-    }
-
-    private void Awake()
-    {
-        LoadData();
     }
     public void WatchVideoAndContinue(CharacterController player)
     {
@@ -64,6 +65,12 @@ public class GameManager : MonoBehaviour
         GameOverMenu.SetActive(false);
     }
 
+    public static void DeleteAllData()
+    {
+        Money = 0;
+        JumpLvl = 0;
+        Income = 0.01f;
+    }
     public static void Save()
     {
         var saveData = new SaveData
@@ -74,7 +81,7 @@ public class GameManager : MonoBehaviour
             IncomeLvl = IncomeLvl,
             IncomeUpgrade = IncomeUpgrade,
             Income = Income,
-            Score = Score,
+            BestComboScore = BestComboScore,
             BestScore = BestScore
         };
         string jsonData = JsonUtility.ToJson(saveData);
@@ -93,7 +100,7 @@ public class GameManager : MonoBehaviour
             JumpUpgrade = saveData.JumpUpgrade;
             IncomeLvl = saveData.IncomeLvl;
             IncomeUpgrade = saveData.IncomeUpgrade;
-            Score = saveData.Score;
+            BestComboScore = saveData.BestComboScore;
             BestScore = saveData.BestScore;
             Income = saveData.Income;
         }
@@ -104,6 +111,8 @@ public class GameManager : MonoBehaviour
         Score = 0;
         IsGameStarted = true;
         MainMenu.SetActive(false);
+        BestScoreBar.SetActive(false);
+        BestComboBar.SetActive(false);
         JumpButton.SetActive(true);
         ScoreBar.SetActive(true);
     }
@@ -114,6 +123,7 @@ public class GameManager : MonoBehaviour
         ScoreText.text = Score.ToString();
         ScoreTextGame.text = Score.ToString();
         BestScoreText.text = BestScore.ToString();
+        BestScoreTextMenu.text = BestScore.ToString();
         Button1.text = $"JUMP HEIGHT  LEVEL:{JumpLvl}  COST:{JumpUpgrade}";
         Button2.text = $"INCOME  LEVEL:{IncomeLvl}  COST:{IncomeUpgrade}";
 
@@ -136,6 +146,7 @@ public class GameManager : MonoBehaviour
         ScoreBar.SetActive(false);
         GameOverMenu.SetActive(true);
         lastTimeScale = Time.timeScale;
+        ComboScore = 0;
         Time.timeScale = 0f;
     }
     public void UpgradeIncome()
@@ -202,7 +213,7 @@ public class GameManager : MonoBehaviour
         public int JumpUpgrade;
         public int IncomeLvl;
         public int IncomeUpgrade;
-        public int Score;
+        public int BestComboScore;
         public int BestScore;
     }
 }

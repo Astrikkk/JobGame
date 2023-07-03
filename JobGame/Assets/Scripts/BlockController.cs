@@ -36,6 +36,7 @@ public class BlockController : MonoBehaviour
                 Time.timeScale += 0.02f;
             Destroy(Hit);
             GameManager.Score++;
+            GameManager.ComboScore++;
             if (GameManager.Score > GameManager.BestScore)
             {
                 GameManager.BestScore = GameManager.Score;
