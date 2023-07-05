@@ -21,6 +21,9 @@ public class CharacterController : MonoBehaviour
 
     private float jumpDuration = 0.5f; // Тривалість прижка
     public bool BlockPlace = true;
+    private bool firstBlockPlace = false;
+    private bool firstBlock = true;
+    private float BlockPlacePlus = 2f;
 
     private bool CanJump = false;
     public GameManager gm;
@@ -78,19 +81,49 @@ public class CharacterController : MonoBehaviour
             float randomX;
             Vector3 targetPosition;
 
-            if (BlockPlace)
+            
+            if (firstBlock)
             {
-                randomX = 5;
-                targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + 2f + PlusHeightLeft);
-                BlockPlace = false;
-                PlusHeightLeft += 0.8f;
+                if (firstBlockPlace) BlockPlace = false;
+                if (BlockPlace)
+                {
+                    randomX = 5;
+                    targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + BlockPlacePlus + PlusHeightLeft);
+                    BlockPlace = false;
+                    PlusHeightLeft += 0.8f;
+                    BlockPlacePlus = 1.5f;
+                    firstBlockPlace = false;
+                    firstBlock = false;
+                }
+                else
+                {
+                    randomX = -5;
+                    targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + BlockPlacePlus + PlusHeightRight);
+                    BlockPlace = true;
+                    PlusHeightRight += 0.8f;
+                    BlockPlacePlus = 1.5f;
+                    firstBlockPlace = false;
+                    firstBlock = false;
+                }
             }
             else
             {
-                randomX = -5;
-                targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + 1.5f + PlusHeightRight);
-                BlockPlace = true;
-                PlusHeightRight += 0.8f;
+                if (BlockPlace)
+                {
+                    randomX = 5;
+                    targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + BlockPlacePlus + PlusHeightLeft);
+                    BlockPlace = false;
+                    BlockPlacePlus = 1.5f;
+                    PlusHeightLeft += 0.8f;
+                }
+                else
+                {
+                    randomX = -5;
+                    targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + BlockPlacePlus + PlusHeightRight);
+                    BlockPlace = true;
+                    BlockPlacePlus = 1.5f;
+                    PlusHeightRight += 0.8f;
+                }
             }
 
             GameObject block = Instantiate(blockPrefab, new Vector3(randomX, leftColumn.position.y + 1 + PlusHeightRight, 0f), Quaternion.identity);
@@ -119,11 +152,13 @@ public class CharacterController : MonoBehaviour
             {
                 targetPosition = new Vector3(rightColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 2)));
                 isOnLeftColumn = false;
+                firstBlockPlace = true;
             }
             else
             {
                 targetPosition = new Vector3(leftColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 2)));
                 isOnLeftColumn = true;
+                firstBlockPlace = false;
             }
 
             StartCoroutine(JumpRoutine(targetPosition));

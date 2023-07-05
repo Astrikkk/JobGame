@@ -2001,8 +2001,8 @@ MonoBehaviour:
   columnSpeed: 0.134
   blockSpeed: 3
   blockSpawnRate: 3
-  PlusHeightRight: 1
-  PlusHeightLeft: 0
+  PlusHeightRight: 0.5
+  PlusHeightLeft: 0.5
   skins:
   - {fileID: -747779506, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
   - {fileID: -1087545783, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
