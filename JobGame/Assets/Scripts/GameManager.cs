@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     public static int IncomeLvl = 1;
     public static int IncomeUpgrade;
 
-    public static float Income = 0.1f;
+    public static int Income = 1;
 
 
     private float lastTimeScale;
@@ -42,10 +42,10 @@ public class GameManager : MonoBehaviour
     {
         LoadData();
         IsGameStarted = false;
-        if (IncomeUpgrade < 10) IncomeUpgrade = 10;
-        if (JumpUpgrade < 10) JumpUpgrade = 10;
+        if (IncomeUpgrade < 50) IncomeUpgrade = 50;
+        if (JumpUpgrade < 50) JumpUpgrade = 50;
             WatchVideoMenu.SetActive(false);
-        if (Income <= 0) Income = 0.1f;
+        if (Income <= 1) Income = 1;
     }
     public void WatchVideoAndContinue(CharacterController player)
     {
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
     {
         Money = 0;
         JumpLvl = 0;
-        Income = 0.01f;
+        Income = 1;
         IncomeLvl = 0;
         JumpLvl = 0;
         JumpUpgrade = 10;
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MoneyText.text = Money.ToString("0.00") + "$";
+        MoneyText.text = Mathf.Round(Money).ToString() + "$";
         ScoreText.text = Score.ToString();
         ScoreTextGame.text = Score.ToString();
         BestScoreText.text = BestScore.ToString();
@@ -191,7 +191,7 @@ public class GameManager : MonoBehaviour
         //WATCH VIDEO CODE
         IncomeLvl++;
         Income++;
-        IncomeUpgrade += 10;
+        IncomeUpgrade *= 2;
         JumpLvl++;
         JumpUpgrade += 10;
     }
@@ -215,7 +215,7 @@ public class GameManager : MonoBehaviour
     {
         public float Money;
         public int JumpLvl;
-        public float Income;
+        public int Income;
         public int JumpUpgrade;
         public int IncomeLvl;
         public int IncomeUpgrade;
