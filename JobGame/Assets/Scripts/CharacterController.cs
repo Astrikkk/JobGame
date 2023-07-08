@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SearchService;
 using UnityEngine;
 
 public class CharacterController : MonoBehaviour
@@ -15,15 +13,15 @@ public class CharacterController : MonoBehaviour
     public float PlusHeightLeft;
     public Sprite[] skins;
     private Collider2D col;
+    private bool firstBlockPlace = false;
+    private bool firstBlock = true;
 
-    private bool isOnLeftColumn = true; // «м≥нна, що вказуЇ, чи персонаж знаходитьс€ на л≥вому стовб≥
+
+    public bool isOnLeftColumn = true; // «м≥нна, що вказуЇ, чи персонаж знаходитьс€ на л≥вому стовб≥
     private GameObject cam;
 
     private float jumpDuration = 0.5f; // “ривал≥сть прижка
     public bool BlockPlace = true;
-    private bool firstBlockPlace = false;
-    private bool firstBlock = true;
-    private float BlockPlacePlus = 2f;
 
     private bool CanJump = false;
     public GameManager gm;
@@ -81,27 +79,25 @@ public class CharacterController : MonoBehaviour
             float randomX;
             Vector3 targetPosition;
 
-            
+
             if (firstBlock)
             {
                 if (firstBlockPlace) BlockPlace = false;
                 if (BlockPlace)
                 {
                     randomX = 5;
-                    targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + BlockPlacePlus + PlusHeightLeft);
+                    targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + 2 + PlusHeightLeft);
                     BlockPlace = false;
                     PlusHeightLeft += 0.8f;
-                    BlockPlacePlus = 1.5f;
                     firstBlockPlace = false;
                     firstBlock = false;
                 }
                 else
                 {
                     randomX = -5;
-                    targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + BlockPlacePlus + PlusHeightRight);
+                    targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + 2 + PlusHeightRight);
                     BlockPlace = true;
                     PlusHeightRight += 0.8f;
-                    BlockPlacePlus = 1.5f;
                     firstBlockPlace = false;
                     firstBlock = false;
                 }
@@ -111,22 +107,20 @@ public class CharacterController : MonoBehaviour
                 if (BlockPlace)
                 {
                     randomX = 5;
-                    targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + BlockPlacePlus + PlusHeightLeft);
+                    targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + 2 + PlusHeightLeft);
                     BlockPlace = false;
-                    BlockPlacePlus = 1.5f;
                     PlusHeightLeft += 0.8f;
                 }
                 else
                 {
                     randomX = -5;
-                    targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + BlockPlacePlus + PlusHeightRight);
+                    targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + 2 + PlusHeightRight);
                     BlockPlace = true;
-                    BlockPlacePlus = 1.5f;
                     PlusHeightRight += 0.8f;
                 }
             }
 
-            GameObject block = Instantiate(blockPrefab, new Vector3(randomX, leftColumn.position.y + 1 + PlusHeightRight, 0f), Quaternion.identity);
+            GameObject block = Instantiate(blockPrefab, new Vector3(randomX, leftColumn.position.y + 2 + PlusHeightRight, 0f), Quaternion.identity);
             block.GetComponent<BlockController>().MoveToTarget(targetPosition, blockSpeed);
         }
     }

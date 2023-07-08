@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     public static int IncomeLvl = 1;
     public static int IncomeUpgrade;
 
-    public static float Income = 0.01f;
+    public static float Income = 0.1f;
 
 
     private float lastTimeScale;
@@ -42,10 +42,10 @@ public class GameManager : MonoBehaviour
     {
         LoadData();
         IsGameStarted = false;
-        if (IncomeUpgrade <= 10) IncomeUpgrade = 10;
-        if (JumpUpgrade <= 10) JumpUpgrade = 10;
+        if (IncomeUpgrade < 10) IncomeUpgrade = 10;
+        if (JumpUpgrade < 10) JumpUpgrade = 10;
             WatchVideoMenu.SetActive(false);
-        if (Income <= 0) Income = 0.01f;
+        if (Income <= 0) Income = 0.1f;
     }
     public void WatchVideoAndContinue(CharacterController player)
     {
@@ -56,10 +56,12 @@ public class GameManager : MonoBehaviour
         if (player.BlockPlace)
         {
             player.transform.position = new Vector3(player.leftColumn.transform.position.x, transform.position.y + 10 + player.PlusHeightLeft, transform.position.z);
+            player.isOnLeftColumn = true;
         }
         else
         {
             player.transform.position = new Vector3(player.rightColumn.transform.position.x, transform.position.y + 10 + player.PlusHeightLeft, transform.position.z);
+            player.isOnLeftColumn = false;
         }
         ScoreBar.SetActive(true);
         GameOverMenu.SetActive(false);
@@ -70,6 +72,10 @@ public class GameManager : MonoBehaviour
         Money = 0;
         JumpLvl = 0;
         Income = 0.01f;
+        IncomeLvl = 0;
+        JumpLvl = 0;
+        JumpUpgrade = 10;
+        IncomeUpgrade = 10;
     }
     public static void Save()
     {
@@ -119,7 +125,7 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MoneyText.text = Money.ToString() + "$";
+        MoneyText.text = Money.ToString("0.00") + "$";
         ScoreText.text = Score.ToString();
         ScoreTextGame.text = Score.ToString();
         BestScoreText.text = BestScore.ToString();
@@ -155,8 +161,8 @@ public class GameManager : MonoBehaviour
         {
             Money -= IncomeUpgrade;
             IncomeLvl++;
-            Income++;
-            IncomeUpgrade += 10;
+            Income*=2;
+            IncomeUpgrade *=2;
             Save();
         }
         else
@@ -171,7 +177,7 @@ public class GameManager : MonoBehaviour
         {
             Money -= JumpUpgrade;
             JumpLvl++;
-            JumpUpgrade += 10;
+            JumpUpgrade *=2;
             Save();
         }
         else
