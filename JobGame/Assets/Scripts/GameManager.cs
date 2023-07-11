@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,7 +36,6 @@ public class GameManager : MonoBehaviour
 
     public static int Income = 1;
 
-
     private float lastTimeScale;
 
     private void Start()
@@ -44,9 +44,10 @@ public class GameManager : MonoBehaviour
         IsGameStarted = false;
         if (IncomeUpgrade < 50) IncomeUpgrade = 50;
         if (JumpUpgrade < 50) JumpUpgrade = 50;
-            WatchVideoMenu.SetActive(false);
+        WatchVideoMenu.SetActive(false);
         if (Income <= 1) Income = 1;
     }
+
     public void WatchVideoAndContinue(CharacterController player)
     {
         ///whatch video
@@ -77,6 +78,7 @@ public class GameManager : MonoBehaviour
         JumpUpgrade = 10;
         IncomeUpgrade = 10;
     }
+
     public static void Save()
     {
         var saveData = new SaveData
@@ -90,16 +92,23 @@ public class GameManager : MonoBehaviour
             BestComboScore = BestComboScore,
             BestScore = BestScore
         };
-        string jsonData = JsonUtility.ToJson(saveData);
-        File.WriteAllText("save.json", jsonData);
+
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream fileStream = File.Create("save.dat");
+
+        formatter.Serialize(fileStream, saveData);
+        fileStream.Close();
     }
 
     private void LoadData()
     {
-        if (File.Exists("save.json"))
+        if (File.Exists("save.dat"))
         {
-            string jsonData = File.ReadAllText("save.json");
-            var saveData = JsonUtility.FromJson<SaveData>(jsonData);
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = File.Open("save.dat", FileMode.Open);
+
+            var saveData = (SaveData)formatter.Deserialize(fileStream);
+            fileStream.Close();
 
             Money = saveData.Money;
             JumpLvl = saveData.JumpLvl;
@@ -133,7 +142,7 @@ public class GameManager : MonoBehaviour
         Button1.text = $"JUMP HEIGHT  LEVEL:{JumpLvl}  COST:{JumpUpgrade}";
         Button2.text = $"INCOME  LEVEL:{IncomeLvl}  COST:{IncomeUpgrade}";
 
-        if(BlockController.newRec == 1)
+        if (BlockController.newRec == 1)
         {
             BlockController.newRec = 2;
             ShowNewRecord();
@@ -155,14 +164,15 @@ public class GameManager : MonoBehaviour
         ComboScore = 0;
         Time.timeScale = 0f;
     }
+
     public void UpgradeIncome()
     {
         if (Money >= IncomeUpgrade)
         {
             Money -= IncomeUpgrade;
             IncomeLvl++;
-            Income*=2;
-            IncomeUpgrade *=2;
+            Income *= 2;
+            IncomeUpgrade *= 2;
             Save();
         }
         else
@@ -177,7 +187,7 @@ public class GameManager : MonoBehaviour
         {
             Money -= JumpUpgrade;
             JumpLvl++;
-            JumpUpgrade *=2;
+            JumpUpgrade *= 2;
             Save();
         }
         else
@@ -188,13 +198,14 @@ public class GameManager : MonoBehaviour
 
     public void WatchVideoAndUpgrade()
     {
-        //WATCH VIDEO CODE
+        // WATCH VIDEO CODE
         IncomeLvl++;
         Income++;
         IncomeUpgrade *= 2;
         JumpLvl++;
         JumpUpgrade += 10;
     }
+
     public void ShowNewRecord()
     {
         NewRecordBar.SetActive(true);
@@ -206,9 +217,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         NewRecordBar.SetActive(false);
     }
-
-
-
 
     [System.Serializable]
     private class SaveData

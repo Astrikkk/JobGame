@@ -144,13 +144,13 @@ public class CharacterController : MonoBehaviour
 
             if (isOnLeftColumn)
             {
-                targetPosition = new Vector3(rightColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 2)));
+                targetPosition = new Vector3(rightColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 5)));
                 isOnLeftColumn = false;
                 firstBlockPlace = true;
             }
             else
             {
-                targetPosition = new Vector3(leftColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 2)));
+                targetPosition = new Vector3(leftColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 5)));
                 isOnLeftColumn = true;
                 firstBlockPlace = false;
             }
