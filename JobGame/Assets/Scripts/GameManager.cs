@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public GameObject BestScoreBar;
     public GameObject BestComboBar;
     public GameObject ScoreBar;
+    public ParticleSystem UpgradeParticle;
     public static bool IsGameStarted = false;
     public TextMeshProUGUI MoneyText;
     public TextMeshProUGUI Button1;
@@ -24,6 +25,9 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI BestScoreText;
     public TextMeshProUGUI BestScoreTextMenu;
     public TextMeshProUGUI ScoreTextGame;
+    public TextMeshProUGUI FraseText;
+
+    public string[] Frases;
     public static int Score;
     public static int ComboScore;
     public static int BestScore;
@@ -46,6 +50,8 @@ public class GameManager : MonoBehaviour
         if (JumpUpgrade < 50) JumpUpgrade = 50;
         WatchVideoMenu.SetActive(false);
         if (Income <= 1) Income = 1;
+        string v = Frases[Random.Range(0, Frases.Length)];
+        FraseText.text = v;
     }
 
     public void WatchVideoAndContinue(CharacterController player)
@@ -174,6 +180,7 @@ public class GameManager : MonoBehaviour
             Income *= 2;
             IncomeUpgrade *= 2;
             Save();
+            UpgradeParticle.Play();
         }
         else
         {
@@ -189,6 +196,7 @@ public class GameManager : MonoBehaviour
             JumpLvl++;
             JumpUpgrade *= 2;
             Save();
+            UpgradeParticle.Play();
         }
         else
         {
