@@ -177,8 +177,8 @@ public class GameManager : MonoBehaviour
         {
             Money -= IncomeUpgrade;
             IncomeLvl++;
-            Income *= 2;
-            IncomeUpgrade *= 2;
+            Income += 1;
+            IncomeUpgrade += 50;
             Save();
             UpgradeParticle.Play();
         }
@@ -194,7 +194,7 @@ public class GameManager : MonoBehaviour
         {
             Money -= JumpUpgrade;
             JumpLvl++;
-            JumpUpgrade *= 2;
+            JumpUpgrade += 50;
             Save();
             UpgradeParticle.Play();
         }
@@ -204,14 +204,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+
     public void WatchVideoAndUpgrade()
     {
-        // WATCH VIDEO CODE
-        IncomeLvl++;
-        Income++;
-        IncomeUpgrade *= 2;
+        // WATCH VIDEO COD
         JumpLvl++;
-        JumpUpgrade += 10;
+        JumpUpgrade += 50;
+        Save();
+        IncomeLvl++;
+        Income += 1;
+        IncomeUpgrade += 50;
+        Save();
+        UpgradeParticle.Play();
     }
 
     public void ShowNewRecord()
