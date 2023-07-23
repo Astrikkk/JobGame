@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.IO;
@@ -14,8 +15,9 @@ public class GameManager : MonoBehaviour
     public GameObject WatchVideoMenu;
     public GameObject NewRecordBar;
     public GameObject BestScoreBar;
-    public GameObject BestComboBar;
     public GameObject ScoreBar;
+    public GameObject NameBar;
+    public GameObject ContinueButton;
     public ParticleSystem UpgradeParticle;
     public static bool IsGameStarted = false;
     public TextMeshProUGUI MoneyText;
@@ -25,13 +27,9 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI BestScoreText;
     public TextMeshProUGUI BestScoreTextMenu;
     public TextMeshProUGUI ScoreTextGame;
-    public TextMeshProUGUI FraseText;
 
-    public string[] Frases;
     public static int Score;
-    public static int ComboScore;
     public static int BestScore;
-    public static int BestComboScore = -1;
     public static float Money;
     public static int JumpLvl = 1;
     public static int JumpUpgrade;
@@ -42,6 +40,11 @@ public class GameManager : MonoBehaviour
 
     private float lastTimeScale;
 
+    private bool CanContinue = true;
+    private TimeScaleController timeScaleController;
+    public bool IsOnPause = false;
+
+
     private void Start()
     {
         LoadData();
@@ -50,28 +53,27 @@ public class GameManager : MonoBehaviour
         if (JumpUpgrade < 50) JumpUpgrade = 50;
         WatchVideoMenu.SetActive(false);
         if (Income <= 1) Income = 1;
-        string v = Frases[Random.Range(0, Frases.Length)];
-        FraseText.text = v;
+        timeScaleController = FindObjectOfType<TimeScaleController>();
+        IsOnPause = false;
     }
 
-    public void WatchVideoAndContinue(CharacterController player)
+    public void WatchVideoAndContinue(PlayerController player)
     {
-        ///whatch video
-        if (lastTimeScale >= 2) lastTimeScale -= 0.5f;
-        Time.timeScale = lastTimeScale;
-        player.Invisibility();
-        if (player.BlockPlace)
+        ///whatch video code
+        if (CanContinue)
         {
-            player.transform.position = new Vector3(player.leftColumn.transform.position.x, transform.position.y + 10 + player.PlusHeightLeft, transform.position.z);
-            player.isOnLeftColumn = true;
+            player.Invisibility();
+            player.Respawn();
+            if (lastTimeScale >= 2) lastTimeScale -= 0.3f;
+            Time.timeScale = lastTimeScale;
+            timeScaleController.StartIncreasing();
+           // CanContinue = false;
+            IsOnPause = false;
+            ScoreBar.SetActive(true);
+            JumpButton.SetActive(true);
+            GameOverMenu.SetActive(false);
+            Debug.Log("Continue");
         }
-        else
-        {
-            player.transform.position = new Vector3(player.rightColumn.transform.position.x, transform.position.y + 10 + player.PlusHeightLeft, transform.position.z);
-            player.isOnLeftColumn = false;
-        }
-        ScoreBar.SetActive(true);
-        GameOverMenu.SetActive(false);
     }
 
     public static void DeleteAllData()
@@ -95,7 +97,6 @@ public class GameManager : MonoBehaviour
             IncomeLvl = IncomeLvl,
             IncomeUpgrade = IncomeUpgrade,
             Income = Income,
-            BestComboScore = BestComboScore,
             BestScore = BestScore
         };
 
@@ -121,7 +122,6 @@ public class GameManager : MonoBehaviour
             JumpUpgrade = saveData.JumpUpgrade;
             IncomeLvl = saveData.IncomeLvl;
             IncomeUpgrade = saveData.IncomeUpgrade;
-            BestComboScore = saveData.BestComboScore;
             BestScore = saveData.BestScore;
             Income = saveData.Income;
         }
@@ -133,10 +133,16 @@ public class GameManager : MonoBehaviour
         IsGameStarted = true;
         MainMenu.SetActive(false);
         BestScoreBar.SetActive(false);
-        BestComboBar.SetActive(false);
-        JumpButton.SetActive(true);
         ScoreBar.SetActive(true);
+        NameBar.SetActive(false);
+        JumpButton.SetActive(true);
+        timeScaleController.StartIncreasing();
+        Time.timeScale = 1.3f;
+        CanContinue = true;
+        PlayerController player = GameObject.FindAnyObjectByType<PlayerController>();
+        player.Jump();
     }
+
 
     private void FixedUpdate()
     {
@@ -153,6 +159,7 @@ public class GameManager : MonoBehaviour
             BlockController.newRec = 2;
             ShowNewRecord();
         }
+        if (IsOnPause) Time.timeScale = 0;
     }
 
     public static void RestartScene()
@@ -162,13 +169,19 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(currentSceneName);
     }
 
+   public void SetlastTime()
+    {
+        lastTimeScale = Time.timeScale;
+    }
     public void Loose()
     {
-        ScoreBar.SetActive(false);
-        GameOverMenu.SetActive(true);
-        lastTimeScale = Time.timeScale;
-        ComboScore = 0;
         Time.timeScale = 0f;
+        IsOnPause = true;
+        timeScaleController.StopIncreasing();
+        ScoreBar.SetActive(false);
+        JumpButton.SetActive(false);
+        GameOverMenu.SetActive(true);
+        if (CanContinue == false) ContinueButton.SetActive(false);
     }
 
     public void UpgradeIncome()
@@ -208,7 +221,7 @@ public class GameManager : MonoBehaviour
 
     public void WatchVideoAndUpgrade()
     {
-        // WATCH VIDEO COD
+        // WATCH VIDEO CODE
         JumpLvl++;
         JumpUpgrade += 50;
         Save();
@@ -225,6 +238,8 @@ public class GameManager : MonoBehaviour
         StartCoroutine(HideNewRecordBarAfterDelay());
     }
 
+
+
     private IEnumerator HideNewRecordBarAfterDelay()
     {
         yield return new WaitForSeconds(3f);
@@ -240,7 +255,8 @@ public class GameManager : MonoBehaviour
         public int JumpUpgrade;
         public int IncomeLvl;
         public int IncomeUpgrade;
-        public int BestComboScore;
         public int BestScore;
     }
+
+
 }

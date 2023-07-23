@@ -7,7 +7,7 @@ public class BlockController : MonoBehaviour
     private Collider2D col;
     public GameObject Hit;
     public Sprite placed;
-
+    public bool CanDieInThisBlock = true;
 
     public static int newRec = 0;
 
@@ -27,16 +27,18 @@ public class BlockController : MonoBehaviour
     {
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
+        MoveOnOPos();
+        if (targetPosition == null) Destroy(gameObject);
+    }
+    private void MoveOnOPos()
+    {
         if (transform.position == targetPosition)
         {
             enabled = false;
             col.isTrigger = false;
             GameManager.Money += GameManager.Income;
-            if (Time.timeScale <= 10)
-                Time.timeScale += 0.02f;
             Destroy(Hit);
             GameManager.Score++;
-            GameManager.ComboScore++;
             if (GameManager.Score > GameManager.BestScore)
             {
                 GameManager.BestScore = GameManager.Score;

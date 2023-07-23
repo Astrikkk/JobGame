@@ -1,14 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public Transform leftColumn; // Посилання на лівий стовб
-    public Transform rightColumn; // Посилання на правий стовб
-    public GameObject blockPrefab; // Префаб блоку
-    public float columnSpeed = 2f; // Швидкість руху стовбів
-    public float blockSpeed = 5f; // Швидкість руху блоків
-    public float blockSpawnRate = 1f; // Частота появи блоків
+    public Transform leftColumn;
+    public Transform rightColumn;
+    public GameObject blockPrefab;
+    public float columnSpeed = 2f;
+    public float blockSpeed = 5f;
+    public float blockSpawnRate = 1f;
     public float PlusHeightRight;
     public float PlusHeightLeft;
     public Sprite[] skins;
@@ -17,14 +17,18 @@ public class CharacterController : MonoBehaviour
     private bool firstBlock = true;
 
 
-    public bool isOnLeftColumn = true; // Змінна, що вказує, чи персонаж знаходиться на лівому стовбі
+    public bool isOnLeftColumn = true;
     private GameObject cam;
 
-    private float jumpDuration = 0.5f; // Тривалість прижка
+    private float jumpDuration = 0.5f;
     public bool BlockPlace = true;
 
-    private bool CanJump = false;
+    public bool CanJump = false;
+    public bool CanDie = false;
     public GameManager gm;
+    private BlockController BC;
+
+    public bool firsJump = true;
 
     private void Start()
     {
@@ -33,6 +37,9 @@ public class CharacterController : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().sprite = skins[Random.Range(0, 6)];
         Time.timeScale = 1f;
         col = gameObject.GetComponent<Collider2D>();
+
+        Invisibility();
+        Respawn();
     }
 
     private void Update()
@@ -47,11 +54,11 @@ public class CharacterController : MonoBehaviour
         }
         if (transform.position.x <= -2)
         {
-            transform.position = new Vector3(leftColumn.transform.position.x, transform.position.y + 10+ PlusHeightLeft, transform.position.z);
+            transform.position = new Vector3(leftColumn.transform.position.x, transform.position.y + 10 + PlusHeightLeft, transform.position.z);
         }
-        else if(transform.position.x >= 2)
+        else if (transform.position.x >= 2)
         {
-            transform.position = new Vector3(rightColumn.transform.position.x, transform.position.y + 10+ PlusHeightLeft, transform.position.z);
+            transform.position = new Vector3(rightColumn.transform.position.x, transform.position.y + 10 + PlusHeightLeft, transform.position.z);
         }
         if (Input.GetKeyDown(KeyCode.KeypadMinus))
         {
@@ -122,48 +129,68 @@ public class CharacterController : MonoBehaviour
 
             GameObject block = Instantiate(blockPrefab, new Vector3(randomX, leftColumn.position.y + 2 + PlusHeightRight, 0f), Quaternion.identity);
             block.GetComponent<BlockController>().MoveToTarget(targetPosition, blockSpeed);
+            block.GetComponent<BlockController>().CanDieInThisBlock = true;
+            Debug.Log("Bloc Spawned");
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Hit"))
+        if (collision.gameObject.CompareTag("Hit") && CanDie)
         {
-            gm.Loose();
+            BC = collision.gameObject.transform.parent.GetComponent<BlockController>();
+            if (BC.CanDieInThisBlock)
+            {
+                gm.SetlastTime();
+                gm.Loose();
+                Debug.Log("Loose");
+            }
+            BC.CanDieInThisBlock = false;
         }
+
         if (collision.gameObject.CompareTag("Platform"))
         {
             CanJump = true;
+            CanDie = true;
         }
     }
     public void Jump()
     {
-        if (CanJump)
+        if (firsJump == true)
         {
-            Vector3 targetPosition;
-
-            if (isOnLeftColumn)
+            firsJump = false;
+        }
+        else
+        {
+            if (CanJump)
             {
-                targetPosition = new Vector3(rightColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 20)));
-                isOnLeftColumn = false;
-                firstBlockPlace = true;
-            }
-            else
-            {
-                targetPosition = new Vector3(leftColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 20)));
-                isOnLeftColumn = true;
-                firstBlockPlace = false;
-            }
+                Vector3 targetPosition;
 
-            StartCoroutine(JumpRoutine(targetPosition));
-            CanJump = false;
+                if (isOnLeftColumn)
+                {
+                    targetPosition = new Vector3(rightColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 5)));
+                    targetPosition = new Vector3(rightColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 20)));
+                    isOnLeftColumn = false;
+                    firstBlockPlace = true;
+                }
+                else
+                {
+                    targetPosition = new Vector3(leftColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 5)));
+                    targetPosition = new Vector3(leftColumn.position.x, transform.position.y + (2 + (GameManager.JumpLvl / 20)));
+                    isOnLeftColumn = true;
+                    firstBlockPlace = false;
+                }
+
+                StartCoroutine(JumpRoutine(targetPosition));
+                CanJump = false;
+            }
         }
     }
 
     private IEnumerator JumpRoutine(Vector3 targetPosition)
     {
-        float jumpHeight = 2f + (GameManager.JumpLvl / 2); // Висота прижку
-        float jumpDuration = 1f; // Тривалість прижку
+        float jumpHeight = 2f + (GameManager.JumpLvl / 2);
+        float jumpDuration = 1f;
 
         Vector3 startingPosition = transform.position;
         float elapsedTime = 0f;
@@ -198,6 +225,36 @@ public class CharacterController : MonoBehaviour
     public void Invisibility()
     {
         StartCoroutine(ToggleCollider());
+        CanDie = false;
+    }
+    public void Respawn()
+    {
+        if (CanJump)
+        {
+            if (BlockPlace)
+            {
+                transform.position = new Vector3(leftColumn.transform.position.x, transform.position.y + 7, transform.position.z);
+                isOnLeftColumn = true;
+            }
+            else
+            {
+                transform.position = new Vector3(rightColumn.transform.position.x, transform.position.y + 7, transform.position.z);
+                isOnLeftColumn = false;
+            }
+        }
+        else
+        {
+            if (BlockPlace)
+            {
+                transform.position = new Vector3(leftColumn.transform.position.x, transform.position.y + 7, transform.position.z);
+                isOnLeftColumn = true;
+            }
+            else
+            {
+                transform.position = new Vector3(rightColumn.transform.position.x, transform.position.y + 7, transform.position.z);
+                isOnLeftColumn = false;
+            }
+        }
     }
 
 
