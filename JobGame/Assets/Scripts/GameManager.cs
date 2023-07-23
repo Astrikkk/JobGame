@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
             if (lastTimeScale >= 2) lastTimeScale -= 0.3f;
             Time.timeScale = lastTimeScale;
             timeScaleController.StartIncreasing();
-           // CanContinue = false;
+            CanContinue = false;
             IsOnPause = false;
             ScoreBar.SetActive(true);
             JumpButton.SetActive(true);
