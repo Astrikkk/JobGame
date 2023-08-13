@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
                 if (firstBlockPlace) BlockPlace = false;
                 if (BlockPlace)
                 {
-                    randomX = 5;
+                    randomX = 4;
                     targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + 2 + PlusHeightLeft);
                     BlockPlace = false;
                     PlusHeightLeft += 0.8f;
@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
-                    randomX = -5;
+                    randomX = -4;
                     targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + 2 + PlusHeightRight);
                     BlockPlace = true;
                     PlusHeightRight += 0.8f;
@@ -113,14 +113,14 @@ public class PlayerController : MonoBehaviour
             {
                 if (BlockPlace)
                 {
-                    randomX = 5;
+                    randomX = 4;
                     targetPosition = new Vector3(leftColumn.position.x, leftColumn.position.y + 2 + PlusHeightLeft);
                     BlockPlace = false;
                     PlusHeightLeft += 0.8f;
                 }
                 else
                 {
-                    randomX = -5;
+                    randomX = -4;
                     targetPosition = new Vector3(rightColumn.position.x, rightColumn.position.y + 2 + PlusHeightRight);
                     BlockPlace = true;
                     PlusHeightRight += 0.8f;
