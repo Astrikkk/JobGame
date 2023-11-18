@@ -13,12 +13,12 @@ public class PlayerController : MonoBehaviour
     public float PlusHeightLeft;
     public Sprite[] skins;
     private Collider2D col;
-    private bool firstBlockPlace = false;
-    private bool firstBlock = true;
+    public bool firstBlockPlace = false;
+    public bool firstBlock = true;
 
 
     public bool isOnLeftColumn = true;
-    private GameObject cam;
+    public GameObject cam;
 
     private float jumpDuration = 0.5f;
     public bool BlockPlace = true;
@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
             BC.CanDieInThisBlock = false;
         }
 
-        if (collision.gameObject.CompareTag("Platform"))
+        if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("StartPlatform"))
         {
             CanJump = true;
             CanDie = true;
@@ -217,10 +217,14 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator ToggleCollider()
     {
-        col.enabled = false;
-        yield return new WaitForSeconds(0.1f);
-        col.enabled = true;
+        if (col != null)
+        {
+            col.enabled = false;
+            yield return new WaitForSeconds(0.1f);
+            col.enabled = true;
+        }
     }
+
 
     public void Invisibility()
     {

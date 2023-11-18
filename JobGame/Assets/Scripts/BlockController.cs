@@ -11,6 +11,9 @@ public class BlockController : MonoBehaviour
 
     public static int newRec = 0;
 
+    private bool shouldDestroy = false;
+    private float destroyTimer = 5f;
+
     private void Start()
     {
         col = gameObject.GetComponent<Collider2D>();
@@ -28,8 +31,17 @@ public class BlockController : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
         MoveOnOPos();
-        if (targetPosition == null) Destroy(gameObject);
+
+        if (shouldDestroy)
+        {
+            destroyTimer -= Time.deltaTime;
+            if (destroyTimer <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
+
     private void MoveOnOPos()
     {
         if (transform.position == targetPosition)
@@ -46,6 +58,8 @@ public class BlockController : MonoBehaviour
                     newRec = 1;
             }
             gameObject.GetComponent<SpriteRenderer>().sprite = placed;
+
+            shouldDestroy = true;
         }
     }
 }

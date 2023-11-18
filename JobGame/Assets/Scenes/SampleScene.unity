@@ -623,7 +623,7 @@ GameObject:
   - component: {fileID: 139666770}
   m_Layer: 0
   m_Name: Square
-  m_TagString: Platform
+  m_TagString: StartPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1534,7 +1534,7 @@ GameObject:
   - component: {fileID: 458977667}
   m_Layer: 0
   m_Name: Square (1)
-  m_TagString: Platform
+  m_TagString: StartPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1814,10 +1814,13 @@ MonoBehaviour:
   - {fileID: -1536994602, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
   - {fileID: 1013415271, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
   - {fileID: 512270809, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
+  firstBlockPlace: 0
+  firstBlock: 1
   isOnLeftColumn: 1
+  cam: {fileID: 0}
   BlockPlace: 1
   CanJump: 0
-  CanDie: 0
+  CanDie: 1
   gm: {fileID: 1694366277}
   firsJump: 1
 --- !u!50 &514474188
@@ -2334,7 +2337,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1694366277}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: RestartScene
+        m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10277,6 +10280,10 @@ MonoBehaviour:
   BestScoreTextMenu: {fileID: 289002706}
   ScoreTextGame: {fileID: 1945644212}
   IsOnPause: 0
+  player: {fileID: 514474186}
+  MainCamera: {fileID: 519420028}
+  playerTransform: {fileID: 514474191}
+  cameraTransform: {fileID: 519420032}
 --- !u!4 &1694366278
 Transform:
   m_ObjectHideFlags: 0
@@ -11670,7 +11677,10 @@ MonoBehaviour:
   - {fileID: -1536994602, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
   - {fileID: 1013415271, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
   - {fileID: 512270809, guid: 015e2a5561d7ac34b9d58798492ee1b2, type: 3}
+  firstBlockPlace: 0
+  firstBlock: 1
   isOnLeftColumn: 1
+  cam: {fileID: 0}
   BlockPlace: 1
   CanJump: 0
   CanDie: 0

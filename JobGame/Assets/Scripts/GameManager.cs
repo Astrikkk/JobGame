@@ -44,6 +44,13 @@ public class GameManager : MonoBehaviour
     private TimeScaleController timeScaleController;
     public bool IsOnPause = false;
 
+    public GameObject player;
+    public GameObject MainCamera;
+    public Transform playerTransform;
+    public Transform cameraTransform;
+    private Vector3 initialPlayerPosition;
+    private Vector3 initialCameraPosition;
+
 
     private void Start()
     {
@@ -54,8 +61,46 @@ public class GameManager : MonoBehaviour
         WatchVideoMenu.SetActive(false);
         if (Income <= 1) Income = 1;
         timeScaleController = FindObjectOfType<TimeScaleController>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerTransform = player.transform;
+        cameraTransform = MainCamera.transform;
+        playerTransform.position = player.transform.position;
+        cameraTransform.position = MainCamera.transform.position;
+        initialPlayerPosition = playerTransform.position;
+        initialCameraPosition = cameraTransform.position;
         IsOnPause = false;
     }
+
+    public void GoToMainMenu()
+    {
+        IsOnPause = false;
+        playerTransform.position = initialPlayerPosition;
+        cameraTransform.position = initialCameraPosition;
+        GameObject[] bricks = GameObject.FindGameObjectsWithTag("Platform");
+        for (int i = 0; i < bricks.Length; i++)
+        {
+            Destroy(bricks[i]);
+        }
+        Score = 0;
+        IsGameStarted = false;
+        MainMenu.SetActive(true);
+        BestScoreBar.SetActive(true);
+        ScoreBar.SetActive(false);
+        NameBar.SetActive(true);
+        JumpButton.SetActive(false);
+        GameOverMenu.SetActive(false);
+        player.GetComponent<PlayerController>().StopAllCoroutines();
+        player.GetComponent<PlayerController>().blockSpeed = 3;
+        player.GetComponent<PlayerController>().blockSpawnRate = 3;
+        player.GetComponent<PlayerController>().PlusHeightLeft = 0.5f;
+        player.GetComponent<PlayerController>().PlusHeightRight = 0.5f;
+        player.GetComponent<PlayerController>().BlockPlace = true;
+        player.GetComponent<PlayerController>().firstBlock = true;
+        player.GetComponent<PlayerController>().firstBlockPlace = true;
+        player.GetComponent<PlayerController>().firsJump = true;
+        Time.timeScale = 1.3f;
+    }
+
 
     public void WatchVideoAndContinue(PlayerController player)
     {
